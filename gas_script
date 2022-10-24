@@ -1,0 +1,26 @@
+function PayCheck() {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const data = sheet.getRange(2, 6, sheet.getLastRow() - 1).getValues();
+  const userIdColumn = 3;
+  data.forEach(function(value, index){
+    if (value == "未払い") {
+      notPayRow.push(index+2);
+      notPayUser.push(sheet.getRange(index+2, userIdColumn).getValue());
+      discordBot(sheet.getRange(index+2, userIdColumn).getValue());
+    }
+  });
+}
+
+function discordBot(user) {
+  const WEBHOOK_URL = ""; //取得したWebhookURLを追加
+
+  const payload = {
+    content: `<@${user}>`,
+  };
+
+  UrlFetchApp.fetch(WEBHOOK_URL, {
+    method: "post",
+    contentType: "application/json",
+    payload: JSON.stringify(payload),
+  });
+}
